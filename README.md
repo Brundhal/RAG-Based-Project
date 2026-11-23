@@ -1,72 +1,148 @@
-# PDF Intelligence System with Retrieval Augmented Generation (RAG)
+# PDF Intelligence System Using Retrieval-Augmented Generation (RAG)
 
-## Overview
+## 1. Project Overview
 
-The goal of this project is to create a user-centric and intelligent system that enhances information retrieval from PDF documents through natural language queries. The project focuses on streamlining the user experience by developing an intuitive interface, allowing users to interact with PDF content using language they are comfortable with. To achieve this, we leverage the Retrieval Augmented Generation (RAG) methodology introduced by Meta AI researchers.
+The PDF Intelligence System is an AI-based application that allows users to upload PDF documents and ask questions using natural language.
 
+The system retrieves relevant information from uploaded documents and generates answers based on the available content. It uses Streamlit for the user interface, FAISS for vector search, Sentence Transformers for embeddings, and a locally running Qwen model through Ollama.
 
-https://github.com/ArmaanSeth/ChatPDF/assets/99117431/2500f636-c66d-46ad-bb68-1d55f04ce753
+## 2. Technologies Used
 
+- Python
+- Streamlit
+- FAISS
+- Sentence Transformers
+- all-MiniLM-L6-v2 Embedding Model
+- Qwen2.5:1.5b LLM
+- Ollama
+- TF-IDF
+- PyPDF2
+- Tesseract OCR (optional)
 
-## Retrieval Augmented Generation (RAG)
+## 3. Main Features
 
-### Introduction
+1. Upload and process PDF documents.
+2. Ask questions about uploaded PDFs using natural language.
+3. Retrieve relevant information using semantic and lexical search.
+4. Generate answers using a locally running language model.
+5. Display source document and page information.
+6. Support scanned PDFs through optional OCR.
+7. Evaluate answer quality using a prepared question-and-answer dataset.
 
-RAG is a method designed to address knowledge-intensive tasks, particularly in information retrieval. It combines an information retrieval component with a text generator model to achieve adaptive and efficient knowledge processing. Unlike traditional methods that require retraining the entire model for knowledge updates, RAG allows for fine-tuning and modification of internal knowledge without extensive retraining.
+## 4. How the System Works
 
-### Workflow
+1. The user uploads one or more PDF documents.
+2. Text is extracted from the uploaded PDFs.
+3. Optional OCR is used for scanned PDFs.
+4. The extracted text is divided into smaller chunks.
+5. Sentence Transformers converts text into numerical embeddings.
+6. FAISS supports semantic similarity search, while lexical retrieval helps identify relevant text.
+7. Relevant information is passed to the Qwen language model through Ollama.
+8. The system generates an answer using the retrieved document information and provides source references.
 
-1. **Input**: RAG takes multiple pdf as input.
-2. **VectoreStore**: The pdf's are then converted to vectorstore using FAISS and all-MiniLM-L6-v2 Embeddings model from Hugging Face.
-3. **Memory**: Conversation buffer memory is used to maintain a track of previous conversation which are fed to the llm model along with the user query.
-4. **Text Generation with GPT-3.5 Turbo**: The embedded input is fed to the GPT-3.5 Turbo model from the OpenAI API, which produces the final output.
-5. **User Interface**: Streamlit is used to create the interface for the application.
+## 5. Installation and Setup
 
-### Benefits
+### Step 1: Clone the Repository
 
-- **Adaptability**: RAG adapts to situations where facts may evolve over time, making it suitable for dynamic knowledge domains.
-- **Efficiency**: By combining retrieval and generation, RAG provides access to the latest information without the need for extensive model retraining.
-- **Reliability**: The methodology ensures reliable outputs by leveraging both retrieval-based and generative approaches.
+```bash
+git clone https://github.com/Brundhal/RAG-Based-Project.git
+cd RAG-Based-Project
+```
 
-## Project Features
+### Step 2: Create a Python Environment
 
-1. **User-friendly Interface**: An intuitive interface designed to accommodate natural language queries, simplifying the interaction with PDF documents.
+Use Python 3.11.
 
-2. **Seamless Navigation**: The system streamlines information retrieval, reducing complexity and enhancing the overall user experience.
+```bash
+python -m venv venv
+```
 
-## Getting Started
+Activate the environment on Windows:
 
-To use the PDF Intelligence System:
+```powershell
+.\venv\Scripts\Activate.ps1
+```
 
-1. Clone the repository to your local machine.
-   ```bash
-   git clone https://github.com/ArmaanSeth/ChatPDF.git
-   ```
+### Step 3: Install Dependencies
 
-2. Install dependencies.
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-3. Run the application.
-   ```bash
-   streamlit run app.py
-   ```
+### Step 4: Install and Configure Ollama
 
-4. Open your browser and navigate to `http://localhost:8000` to access the user interface.
+Install Ollama on your computer.
 
-## Contributing
+Download the required model:
 
-We welcome contributions to enhance the PDF Intelligence System. If you're interested in contributing, please follow our [Contribution Guidelines](CONTRIBUTING.md).
+```bash
+ollama pull qwen2.5:1.5b
+```
 
-## License
+Make sure Ollama is running before asking questions in the application.
 
-This project is licensed under the [Apache License](LICENSE).
+### Step 5: Optional OCR Setup
 
-## Acknowledgments
+Install the optional Python packages:
 
-We would like to express our gratitude to the Hugging Face community for the all-MiniLM-L6-v2 Embeddings model, and OpenAI for providing the GPT-3.5 Turbo model through their API.
+```bash
+pip install -r requirements-ocr.txt
+```
 
----
+For scanned PDF support, install Tesseract OCR separately and ensure that `tesseract.exe` is available through PATH.
 
-Feel free to explore and enhance the capabilities of the PDF Intelligence System. Happy querying!
+### Step 6: Run the Application
+
+```bash
+streamlit run app.py
+```
+
+Open the following address in your browser:
+
+```text
+http://localhost:8501
+```
+
+## 6. Answer Evaluation
+
+The project includes an evaluation script to compare generated answers with manually prepared reference answers.
+
+The evaluation dataset should contain:
+
+- question
+- ground_truth
+
+Example:
+
+```csv
+question,ground_truth
+"What does OCR mean?","Optical character recognition"
+```
+
+Run the evaluation script:
+
+```bash
+python evaluate_accuracy.py --pdf "path/to/document.pdf" --dataset "path/to/evaluation_dataset.csv" --output evaluation_results.csv
+```
+
+The evaluation metrics help assess answer quality on the selected dataset. They do not guarantee accuracy for every PDF or question.
+
+## 7. Important Notes
+
+- The embedding model may download automatically the first time it is used.
+- Ollama and the Qwen model must be installed separately.
+- OCR is optional and requires a separate Tesseract installation.
+- Answers depend on the quality of the uploaded PDFs and the retrieved information.
+- Always verify important answers against the original document.
+
+## 8. Future Enhancements
+
+- Improve retrieval accuracy.
+- Add voice-based question input and answer output.
+- Support more document formats.
+- Improve handling of large PDF files.
+- Enhance answer evaluation and source verification.
+
+## 9. License
+
+This project is distributed under the license included in the repository.

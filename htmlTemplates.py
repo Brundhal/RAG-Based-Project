@@ -120,7 +120,7 @@ section[data-testid="stSidebar"] [data-testid="stFileUploader"] {
     border: 1px solid #172033;
     border-radius: 7px;
     box-shadow: 0 14px 28px rgba(33, 52, 76, 0.12);
-    margin-top: 6.8rem;
+    margin-top: 5.35rem;
     min-height: 145px;
     padding: 1.1rem 1rem 1rem;
     position: relative;
@@ -128,15 +128,15 @@ section[data-testid="stSidebar"] [data-testid="stFileUploader"] {
 
 section[data-testid="stSidebar"] [data-testid="stFileUploader"]::before {
     color: var(--ink);
-    content: "Model: local question-answering model\A\AUpload your PDF here and click on Process";
+    content: "Model: local question-answering model\A\AUpload your PDF here and click on 'Process'";
     display: block;
-    font-size: 1rem;
+    font-size: 1.12rem;
     font-weight: 900;
     left: 0;
-    line-height: 1.35;
+    line-height: 1.5;
     position: absolute;
-    top: -6.3rem;
-    white-space: pre;
+    top: -5.25rem;
+    white-space: pre-line;
 }
 
 section[data-testid="stSidebar"] [data-testid="stFileUploader"] label,
@@ -221,13 +221,8 @@ section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] button s
 
 section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"],
 section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] span,
-section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] p,
-section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderFileName"],
-section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderFileName"] span,
-section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderDeleteBtn"],
-section[data-testid="stSidebar"] [data-testid="stFileUploader"] svg {
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] p {
     color: #ffffff !important;
-    fill: #ffffff !important;
 }
 
 .selected-docs,
@@ -244,7 +239,7 @@ section[data-testid="stSidebar"] [data-testid="stFileUploader"] svg {
 }
 
 .selected-doc {
-    color: var(--ink);
+    color: #ffffff;
     font-size: 0.94rem;
     font-weight: 700;
     margin-top: 0.55rem;
@@ -527,76 +522,6 @@ section[data-testid="stSidebar"] .stButton > button {
     width: 100%;
 }
 
-.answer-format {
-    display: grid;
-    gap: 0.8rem;
-}
-
-.answer-section {
-    background: #ffffff;
-    border: 1px solid #dbe8f6;
-    border-radius: 12px;
-    padding: 0.9rem 1rem;
-}
-
-.answer-main {
-    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
-    border-left: 4px solid var(--coral);
-}
-
-.answer-metric {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-.answer-source {
-    background: #f8fbff;
-}
-
-.answer-label {
-    color: var(--blue);
-    font-size: 0.9rem;
-    font-weight: 900;
-    letter-spacing: 0.02em;
-    margin-bottom: 0.35rem;
-    text-transform: uppercase;
-}
-
-.answer-text {
-    color: var(--ink);
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.7;
-}
-
-.answer-badge {
-    background: #e8f4ff;
-    border: 1px solid #b8d4f0;
-    border-radius: 999px;
-    color: var(--blue);
-    font-size: 0.95rem;
-    font-weight: 900;
-    padding: 0.35rem 0.8rem;
-    white-space: nowrap;
-}
-
-.answer-list {
-    color: var(--ink);
-    margin: 0.25rem 0 0 1.15rem;
-    padding: 0;
-}
-
-.answer-list li {
-    margin-bottom: 0.55rem;
-    padding-left: 0.15rem;
-}
-
-.answer-list li:last-child {
-    margin-bottom: 0;
-}
-
 @media (max-width: 760px) {
     .stApp {
         background: var(--page);
@@ -633,11 +558,6 @@ section[data-testid="stSidebar"] .stButton > button {
 
     .stTextInput label::after {
         top: -2.5rem;
-    }
-
-    .answer-metric {
-        align-items: flex-start;
-        flex-direction: column;
     }
 }
 </style>

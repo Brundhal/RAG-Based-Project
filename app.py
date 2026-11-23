@@ -5,7 +5,7 @@ from collections import Counter, defaultdict
 from io import BytesIO
 from math import log, sqrt
 from pathlib import Path
-
+import json
 from dotenv import load_dotenv
 import streamlit as st
 import streamlit.components.v1 as components
@@ -2149,8 +2149,9 @@ def handle_question(question):
     )
 
 
+
 def render_chat_history():
-    for role, message in st.session_state.chat_history:
+    for index, (role, message) in enumerate(st.session_state.chat_history):
         if role == "user":
             st.write(
                 user_template.replace("{{MSG}}", message),
@@ -2161,6 +2162,57 @@ def render_chat_history():
                 bot_template.replace("{{MSG}}", message),
                 unsafe_allow_html=True
             )
+
+            # Voice output for bot answers
+            speech_text = re.sub(r"<[^>]+>", " ", str(message))
+            speech_text = re.sub(r"\s+", " ", speech_text).strip()
+            speech_json = json.dumps(speech_text)
+
+            components.html(
+                f"""
+                <button
+                    onclick="speakAnswer()"
+                    style="
+                        background-color: #2563eb;
+                        color: white;
+                        border: none;
+                        padding: 8px 14px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                    ">
+                    🔊 Listen to Answer
+                </button>
+
+                <button
+                    onclick="window.speechSynthesis.cancel()"
+                    style="
+                        background-color: #64748b;
+                        color: white;
+                        border: none;
+                        padding: 8px 14px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                    ">
+                    ⏹ Stop
+                </button>
+
+                <script>
+                    const answerText = {speech_json};
+
+                    function speakAnswer() {{
+                        window.speechSynthesis.cancel();
+
+                        const speech = new SpeechSynthesisUtterance(answerText);
+                        speech.lang = "en-IN";
+                        speech.rate = 0.9;
+
+                        window.speechSynthesis.speak(speech);
+                    }}
+                </script>
+                """,
+                height=55,
+            )
+
 def main():
     load_dotenv()
 

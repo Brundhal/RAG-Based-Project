@@ -88,19 +88,29 @@ def retrieve_chunks(query, rag_data, top_k=8):
     return ranked[:top_k]
 
 
+
 def generate_answer(query, retrieved_chunks):
     if not retrieved_chunks:
         return "I couldn't find this information in the uploaded PDFs."
+
     context = "\n\n".join(
         f"[Document: {c['document']} | Page: {c['page']}]\n{c['text']}"
         for c in retrieved_chunks
     )
-    prompt = f"""You answer questions about uploaded PDFs.
-Use ONLY the supplied context. Never use outside knowledge or invent missing points.
-If asked for a numbered report section, include only statements clearly belonging to that section.
-Do not combine objectives with advantages, benefits, features, or conclusions.
-Preserve the meaning and wording of the document. If the section or answer is not clearly present, say exactly: I couldn't find this information in the uploaded PDFs.
-Do not invent page numbers or citations; citations are handled by the application.
+
+    prompt = f"""You are a helpful PDF question-answering assistant.
+
+Answer the user's question using ONLY the information in the supplied PDF context.
+
+Instructions:
+1. Give a clear, complete answer in simple English.
+2. Include all relevant points found in the context.
+3. Use numbered points when the question asks for objectives, advantages, features or steps.
+4. Do not mix unrelated sections.
+5. Do not invent information or use outside knowledge.
+6. If the answer is not available in the context, say:
+"I couldn't find this information in the uploaded PDFs."
+7. Always finish your sentences properly.
 
 PDF CONTEXT:
 {context}
@@ -108,13 +118,40 @@ PDF CONTEXT:
 QUESTION:
 {query}
 
-GROUNDED ANSWER:
+COMPLETE ANSWER:
 """
-    payload = {"model": LLM_MODEL, "prompt": prompt, "stream": False,
-               "options": {"temperature": 0, "top_p": 0.8}}
+
+    payload = {
+        "model": LLM_MODEL,
+        "prompt": prompt,
+        "stream": False,
+        "options": {
+            "temperature": 0.1,
+            "top_p": 0.8,
+            "num_predict": 350,
+            "num_ctx": 8192,
+            "repeat_penalty": 1.1
+        }
+    }
+
     try:
-        response = requests.post(OLLAMA_URL, json=payload, timeout=180)
+        response = requests.post(
+            OLLAMA_URL,
+            json=payload,
+            timeout=180
+        )
         response.raise_for_status()
-        return response.json().get("response", "").strip() or "I couldn't find this information in the uploaded PDFs."
+
+        answer = response.json().get("response", "").strip()
+
+        if not answer:
+            return "I couldn't generate an answer. Please try again."
+
+        return answer
+
     except requests.exceptions.RequestException as error:
-        return f"Could not connect to Ollama. Please check that Ollama is running. Details: {error}"
+        return (
+            "Could not connect to Ollama. "
+            "Please check that Ollama is running. "
+            f"Details: {error}"
+        )
